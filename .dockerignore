@@ -1,0 +1,25 @@
+# flyctl launch added from .gitignore
+# Dependencies
+**/node_modules
+
+# Secrets — NEVER commit these
+**/.env
+
+# Database
+**/data
+**/*.db
+**/*.db-journal
+
+# Logs
+**/*.log
+**/npm-debug.log*
+
+# OS
+**/.DS_Store
+**/Thumbs.db
+
+# Editor
+**/.vscode
+**/.idea
+**/*.swp
+fly.toml

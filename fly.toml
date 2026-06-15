@@ -1,49 +1,39 @@
-# fly.toml — Fly.io configuration for AI Job Agent
-# Docs: https://fly.io/docs/reference/configuration/
+# fly.toml app configuration file generated for job-agent on 2026-06-15T18:38:32+05:30
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "job-agent"          # Change this to your chosen app name (must be globally unique on Fly)
-primary_region = "sin"     # Singapore — closest free region to India
-                           # Other options: bom (Mumbai, paid), blr (Bangalore, paid)
-                           # Free regions: sin, nrt (Tokyo), syd (Sydney), iad (Virginia)
+app = 'job-agent'
+primary_region = 'sin'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  NODE_ENV = "production"
-  DB_PATH  = "/data/jobs.db"
+  DB_PATH = '/data/jobs.db'
+  NODE_ENV = 'production'
 
-# Secrets (set via CLI, never in this file):
-#   fly secrets set ANTHROPIC_API_KEY=...
-#   fly secrets set TELEGRAM_BOT_TOKEN=...
-#   fly secrets set TELEGRAM_CHAT_ID=...
-#   fly secrets set DIGEST_CRON="0 8 * * *"
-
-[mounts]
-  # Persistent volume for SQLite database
-  # Created once with: fly volumes create job_agent_data --size 1
-  source      = "job_agent_data"
-  destination = "/data"
+[[mounts]]
+  source = 'job_agent_data'
+  destination = '/data'
 
 [[services]]
-  # The bot uses Telegram polling (outbound only) — no inbound HTTP needed.
-  # We define a minimal internal check so Fly knows the process is healthy.
+  protocol = 'tcp'
   internal_port = 8080
-  protocol      = "tcp"
+  ports = []
 
   [[services.tcp_checks]]
-    interval    = "30s"
-    timeout     = "5s"
-    grace_period = "10s"
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '10s'
 
 [checks]
   [checks.alive]
-    type     = "tcp"
-    port     = 8080
-    interval = "60s"
-    timeout  = "5s"
+    port = 8080
+    type = 'tcp'
+    interval = '1m0s'
+    timeout = '5s'
 
 [[vm]]
-  # Free tier: shared-cpu-1x with 256MB RAM
-  size   = "shared-cpu-1x"
-  memory = "256mb"
+  size = 'shared-cpu-1x'
+  memory = '256mb'

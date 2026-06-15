@@ -1,0 +1,17 @@
+name: Feature Request
+description: Suggest a new job source, command, or improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: feature
+    attributes:
+      label: What would you like?
+      placeholder: e.g. Add LinkedIn Jobs as a source, or a /pause command to stop daily digests
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would this help?
+      placeholder: Explain the use case

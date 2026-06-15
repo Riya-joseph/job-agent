@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate:
+    name: Validate & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check syntax (all source files)
+        run: |
+          echo "Checking syntax..."
+          for f in $(find src -name "*.js"); do
+            node --check "$f" && echo "  ✅ $f" || exit 1
+          done
+
+      - name: Verify required env vars are documented
+        run: |
+          echo "Checking .env.example exists..."
+          test -f .env.example && echo "✅ .env.example present" || exit 1
+
+      - name: Check no secrets committed
+        run: |
+          echo "Scanning for accidental secrets..."
+          if [ -f .env ]; then
+            echo "❌ .env file found in repo — remove it immediately!"
+            exit 1
+          fi
+          echo "✅ No .env file committed"
